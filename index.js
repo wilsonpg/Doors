@@ -1,5 +1,8 @@
 `use strict`;
 
+import { getColorCount, getColor } from './ColorService/index.js';
+import { getRiddleCount, getQuestionAndAnswers } from './RiddleService/index.js';
+import { drawDoor } from './DoorService/index.js';
 
 /* Main idea: Starts on purple screen.  User is searching for a door the same color as the screen.
 Once they open that door, they get some prize.
@@ -16,37 +19,35 @@ Commandments:
     a. text changes to Fuschia
 */
 
-//external files
-// const DoorService = require(`./DoorService`);
-// const ColorService = require(`./ColorService`);
-// const RiddleService = require(`./RiddleService`);
-
-//html elements
+//html dom elements
 const body = document.getElementById(`body`);
-const gameHeader = document.getElementById(`gameHeader`);
+
 const welcomeScreen = document.getElementById(`welcomeScreen`);
-const gameScreen = document.getElementById(`gameScreen`);
 const startButton = document.getElementById(`startButton`);
+
+const gameScreen = document.getElementById(`gameScreen`);
+const gameHeader = document.getElementById(`gameHeader`);
+
 const promptLabel = document.getElementById(`promptLabel`);
+const answerLabel1 = document.getElementById(`answerLabel1`);
+const answerLabel2 = document.getElementById(`answerLabel2`);
+const answerLabel3 = document.getElementById(`answerLabel3`);
+
 const door1 = document.getElementById(`door1`);
 const door2 = document.getElementById(`door2`);
 const door3 = document.getElementById(`door3`);
 
-//initialized variable for game
-let game, usedRiddles = [];
+//initialized variable for site visit
+let purpleDoorGame, usedRiddles = [];
 
 
 class PurpleDoorGame {
 
     constructor() {
-        this.doors = [],
-        this.prompt,
-        this.options = [],
-        this.count = 1,
-        this.color;
+        this.options = []
     }
 
-    async display(){
+    async showGame(){
         welcomeScreen.classList.add(`hidden`);
         gameScreen.classList.remove(`hidden`);
         gameHeader.classList.add(`header2`);
@@ -54,30 +55,41 @@ class PurpleDoorGame {
     }
 
     async task(){
-        //determining task type
+        //determining task type, can implement more later
         // let randomTask = Math.random(2) + 1;
 
         //riddle
         // if(randomTask == 1){
             // let running = true;
             // while(running){
-                let totalRiddles = await this.getRiddleCount();
+                let totalRiddles = await getRiddleCount();
+                console.log(totalRiddles);
                 let randomRiddle = Math.random(totalRiddles);
-                let riddle = this.getQuestionAndAnswers(randomRiddle);
+                let riddle = getQuestionAndAnswers(randomRiddle);
 
                 let answers = riddle.answers.split(`, `);
 
                 //if the riddle has not been used already
                 if(!usedRiddles.find(ur => ur.question.id == randomRiddle.question.id)){
                     //use riddle
-                    promptLabel.innerHTML = riddle[0].question;
+                    promptLabel.innerHTML = riddle.question;
                     //send answers to options array
+                    let answerCount = 1;
                     for(let answer of answers){
-                        this.options.push(riddle.answer);
-                        running = false;
+                        this.options.push(answer);
+                        if(answerCount == 1){
+                            answerLabel1.innerHTML = answer;
+                        }
+                        else if(answerCount == 2){
+                            answerLabel2.innerHTML = answer;
+                        }
+                        else if(answerCount == 3){
+                            answerLabel3.innerHTML = answer;
+                        }
                     }
                     //add riddle to array after used
                     usedRiddles.push(randomRiddle);
+                    running = false;
                 }
             // }
         // }
@@ -91,172 +103,174 @@ class PurpleDoorGame {
         // }
     }
 
-    async getColorCount(){
-        /*
-        SELECT COUNT(*)
-        FROM colors;
-        */
-    };
-    
-    async getColor(color){
-        // main (){
-        //     /*
-        //     SELECT *
-        //     FROM colors
-        //     WHERE id = ${ color };
-        //     */
-        // }
-        // main();
-    };
-
-    async getRiddleCount(){
-        /*
-        SELECT COUNT(*)
-        FROM questions;
-        */
-    }
-    
-    async getQuestionAndAnswers(question){
-        /*
-        Query database for random question and associated answers:
-    
-        SELECT DISTINCT questions.id, questions.text, GROUP_CONCAT(answers.text SEPARATOR (', '))
-        FROM questions
-        JOIN answers ON answers.question_id = questions.id
-        WHERE questions.id = ${ question };
-        */
-    };
-
-    async door(){
-        //door creation
-        for(let option of this.options){
-            //for random door color
-            let totalColors = await this.getColorCount();
+    async createDoors(){
+        doors = [1, 2, 3];
+        createdDoors = [];
+        for(let door of doors){
+            let totalColors = await getColorCount();
             let randomColor = Math.random(totalColors);
-            let color = await this.getColor(randomColor);
-
-            let door = this.drawDoor(color.name, this.count);
-            if(color.is_purple_door){
-                //grey out other two doors and show message `Your treasure awaits`
-            }
-            this.count++;
+            let color = await getColor(randomColor);
+            let door = drawDoor(color, door);
+            createdDoors.push(door);
         }
+
+        return createdDoors;
     }
 
-    async drawDoor(color, count){
-        if(count == 1){
-            const context = door1.getContext("2d");
-            context.beginPath();
-            context.rect(20, 20, 50, 100);
-            context.fillStyle = color;
-            context.fill();
-            context.stroke();
-        }
-        else if(count == 2){
-            const context = door2.getContext("2d");
-            context.beginPath();
-            context.rect(20, 20, 50, 100);
-            context.fillStyle = color;
-            context.fill();
-            context.stroke();
-        }
-        else if(count == 3){
-            const context = door3.getContext("2d");
-            context.beginPath();
-            context.rect(20, 20, 50, 100);
-            context.fillStyle = color;
-            context.fill();
-            context.stroke();
-        }
-    };
-
-    async checkIfCorrect(door, option){
-        if(door == this.options.findIndex(o => o.answer = option) + 1){
+    async checkIfCorrect(door){
+        if(door == this.options.findIndex(o => o.correct_answer == 1) + 1){
             return true;
         }
         else{
             return false;
         }
     }
+
+    // async purpleDoor(door){
+    //     if(door == 1){
+    //         const context = door2.getContext("2d");
+    //         context.beginPath();
+    //         context.rect(20, 20, 50, 100);
+    //         context.fillStyle = `DarkGray`;
+    //         context.fill();
+    //         context.stroke();
+    
+    //         door2.removeEventListener(`click`, e);
+    
+    //         const context = door3.getContext("2d");
+    //         context.beginPath();
+    //         context.rect(20, 20, 50, 100);
+    //         context.fillStyle = `DarkGray`;
+    //         context.fill();
+    //         context.stroke();
+    
+    //         door3.removeEventListener(`click`, e);
+    //     }
+    //     else if(door == 2){
+    //         const context = door1.getContext("2d");
+    //         context.beginPath();
+    //         context.rect(20, 20, 50, 100);
+    //         context.fillStyle = `DarkGray`;
+    //         context.fill();
+    //         context.stroke();
+    
+    //         door1.removeEventListener(`click`, e);
+    
+    //         const context = door3.getContext("2d");
+    //         context.beginPath();
+    //         context.rect(20, 20, 50, 100);
+    //         context.fillStyle = `DarkGray`;
+    //         context.fill();
+    //         context.stroke();
+    
+    //         door3.removeEventListener(`click`, e);
+    //     }
+    //     else if(door == 3){
+    //         const context = door1.getContext("2d");
+    //         context.beginPath();
+    //         context.rect(20, 20, 50, 100);
+    //         context.fillStyle = `DarkGray`;
+    //         context.fill();
+    //         context.stroke();
+    
+    //         door1.removeEventListener(`click`, e);
+    
+    //         const context = door2.getContext("2d");
+    //         context.beginPath();
+    //         context.rect(20, 20, 50, 100);
+    //         context.fillStyle = `DarkGray`;
+    //         context.fill();
+    //         context.stroke();
+    
+    //         door2.removeEventListener(`click`, e);
+    //     }
+    // };
 }
 
 startButton.addEventListener(`click`, (e) => {
     e.preventDefault();
 
-    game = new PurpleDoorGame;
+    purpleDoorGame = new PurpleDoorGame;
 
-    game.display();
-    game.task();
-    game.door();
+    await purpleDoorGame.showGame();
+    await purpleDoorGame.task();
+    // await purpleDoorGame.door();
 });
 
-door1.addEventListener(`click`, (e) => {
-    e.preventDefault();
+// door1.addEventListener(`click`, (e) => {
+//     e.preventDefault();
 
-    let door = 1;
+//     let door = 1;
 
-    if(game.checkIfCorrect(door, this.options[0]))
-    {
-        game = new PurpleDoorGame;
+//     if(purpleDoorGame.checkIfCorrect(door))
+//     {
+//         purpleDoorGame = new PurpleDoorGame;
 
-        game.display();
-        game.task();
-        game.door();
-    }
-    else{
-        const context = door1.getContext("2d");
-        context.beginPath();
-        context.rect(20, 20, 50, 100);
-        context.fillStyle = `DarkGray`;
-        context.fill();
-        context.stroke();
-    }
-});
+//         purpleDoorGame.display();
+//         purpleDoorGame.task();
+//         purpleDoorGame.door();
+//         purpleDoorGame.purpleDoor();
+//     }
+//     else{
+//         const context = door1.getContext("2d");
+//         context.beginPath();
+//         context.rect(20, 20, 50, 100);
+//         context.fillStyle = `DarkGray`;
+//         context.fill();
+//         context.stroke();
 
-door2.addEventListener(`click`, (e) => {
-    e.preventDefault();
+//         door1.removeEventListener(`click`, e);
+//     }
+// });
 
-    let door = 2;
+// door2.addEventListener(`click`, (e) => {
+//     e.preventDefault();
 
-    if(game.checkIfCorrect(door, this.options[1]))
-    {
-        game = new PurpleDoorGame;
+//     let door = 2;
 
-        game.display();
-        game.task();
-        game.door();
-    }
-    else{
-        const context = door2.getContext("2d");
-        context.beginPath();
-        context.rect(20, 20, 50, 100);
-        context.fillStyle = `DarkGray`;
-        context.fill();
-        context.stroke();
-    }
-});
+//     if(purpleDoorGame.checkIfCorrect(door))
+//     {
+//         purpleDoorGame = new PurpleDoorGame;
 
-door3.addEventListener(`click`, (e) => {
-    e.preventDefault();
+//         purpleDoorGame.display();
+//         purpleDoorGame.task();
+//         purpleDoorGame.door();
+//     }
+//     else{
+//         const context = door2.getContext("2d");
+//         context.beginPath();
+//         context.rect(20, 20, 50, 100);
+//         context.fillStyle = `DarkGray`;
+//         context.fill();
+//         context.stroke();
 
-    let door = 3;
+//         door2.removeEventListener(`click`, e);
+//     }
+// });
 
-    if(game.checkIfCorrect(door, this.options[2]))
-    {
-        game = new PurpleDoorGame;
+// door3.addEventListener(`click`, (e) => {
+//     e.preventDefault();
 
-        game.display();
-        game.task();
-        game.door();
-    }
-    else{
-        const context = door3.getContext("2d");
-        context.beginPath();
-        context.rect(20, 20, 50, 100);
-        context.fillStyle = `DarkGray`;
-        context.fill();
-        context.stroke();
-    }
-});
+//     let door = 3;
+
+//     if(purpleDoorGame.checkIfCorrect(door))
+//     {
+//         purpleDoorGame = new PurpleDoorGame;
+
+//         purpleDoorGame.display();
+//         purpleDoorGame.task();
+//         purpleDoorGame.door();
+//     }
+//     else{
+//         const context = door3.getContext("2d");
+//         context.beginPath();
+//         context.rect(20, 20, 50, 100);
+//         context.fillStyle = `DarkGray`;
+//         context.fill();
+//         context.stroke();
+
+//         door3.removeEventListener(`click`, e);
+//     }
+// });
 
 
