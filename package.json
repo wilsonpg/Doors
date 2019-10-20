@@ -2,12 +2,17 @@
   "name": "doors",
   "version": "0.1.0",
   "devDependencies": {
-    "eslint": "~6.5.1",
+    "eslint": "^6.5.1",
     "lodash": "~4.17.15",
     "mysql2": "^1.7.0",
     "nodemon": "~1.19.4"
   },
   "dependencies": {
+    "browserify": "^16.5.0",
+    "cardinal": "^2.1.1",
+    "node": "^12.12.0",
+    "require": "^2.4.20",
+    "requirejs": "^2.3.6",
     "simplehttpserver": "^0.3.0"
   }
 }

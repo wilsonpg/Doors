@@ -1,8 +1,6 @@
 `use strict`;
 
-import { getColorCount, getColor } from './ColorService/index.js';
-import { getRiddleCount, getQuestionAndAnswers } from './RiddleService/index.js';
-import { drawDoor } from './DoorService/index.js';
+let RiddleService = require(`./RiddleService`);
 
 /* Main idea: Starts on purple screen.  User is searching for a door the same color as the screen.
 Once they open that door, they get some prize.
@@ -187,7 +185,7 @@ class PurpleDoorGame {
     // };
 }
 
-startButton.addEventListener(`click`, (e) => {
+startButton.addEventListener(`click`, async (e) => {
     e.preventDefault();
 
     purpleDoorGame = new PurpleDoorGame;

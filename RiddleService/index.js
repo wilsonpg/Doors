@@ -1,6 +1,6 @@
 `use strict`;
 
-let mysql = require(`/node_modules/mysql2/promise`);
+let mysql = require(`mysql2/promise`);
 
 let connectionObject = {
     host: `localhost`,
@@ -9,7 +9,7 @@ let connectionObject = {
     database: `sys`
 }
 
-export async function getRiddleCount(){
+module.exports = async function getRiddleCount(){
     let rows;
     async function main() {
         // create the connection
@@ -24,7 +24,7 @@ export async function getRiddleCount(){
       return rows;
 };
 
-export async function getQuestionAndAnswers(question){
+module.exports = async function getQuestionAndAnswers(question){
     let rows;
     async function main() {
         // create the connection

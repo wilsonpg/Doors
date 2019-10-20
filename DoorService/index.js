@@ -4,7 +4,7 @@ const door1 = document.getElementById(`door1`);
 const door2 = document.getElementById(`door2`);
 const door3 = document.getElementById(`door3`);
 
-export async function drawDoor(color, door){
+module.exports = async function drawDoor(color, door){
     if(door == 1){
         const context = door1.getContext("2d");
         context.beginPath();
