@@ -1,5 +1,6 @@
 `use strict`;
 
+
 /* Main idea: Starts on purple screen.  User is searching for a door the same color as the screen.
 Once they open that door, they get some prize.
 
@@ -36,6 +37,7 @@ class PurpleDoorGame {
 
     constructor() {
         this.doors = [],
+        this.prompt,
         this.options = [],
         this.count = 1
     }
@@ -49,9 +51,10 @@ class PurpleDoorGame {
 
     async task(){
         //determining task type
-        let randomTask = Math.random(2);
+        let randomTask = Math.random(2) + 1;
 
-        if(randomTask == 0){
+        //riddle
+        if(randomTask == 1){
             let running = true;
             while(running){
                 let randomRiddle = Math.random(riddles.length);
@@ -60,6 +63,7 @@ class PurpleDoorGame {
                     //if the riddle has not been used already
                     if(!usedRiddles.find(ur => ur.question.id == randomRiddle.question.id)){
                         //use riddle, send answers to options array
+                        this.prompt = riddle[0].question;
                         for(let riddle of randomRiddle){
                             this.options.push(riddle.answer);
                             running = false;
@@ -70,16 +74,25 @@ class PurpleDoorGame {
                 }
             }
         }
+        // task 2
+        else if(randomTask == 2){
+
+        }
+        // task 3
+        else if(randomTask == 3){
+
+        }
     }
 
     async door(){
         //door creation
         for(let option of this.options){
             //for random door color
-            let randomColor = Math.random(colors.length);
-            let color = colors[randomColor].name;
+            let totalColors = await ColorService.getCount();
+            let randomColor = Math.random(totalColors);
+            let color = await ColorService.getColor(randomColor);
 
-            let door = await DoorService.drawDoor(color, canvas, );
+            let door = await DoorService.drawDoor(color, this.count);
             count++;
         }
     }
@@ -91,6 +104,6 @@ startButton.addEventListener(`click`, (e) => {
     game = new PurpleDoorGame;
 
     game.display();
-    // game.task();
-    // game.door();
+    game.task();
+    game.door();
 });

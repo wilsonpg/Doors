@@ -7,7 +7,7 @@ getCount(() => {
     */
 });
 
-getColors(color => {
+getColor(color => {
     // main (){
     //     /*
     //     SELECT name
