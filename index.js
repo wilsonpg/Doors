@@ -36,7 +36,15 @@ class PurpleDoorGame {
 
     constructor() {
         this.doors = [],
-        this.options = []
+        this.options = [],
+        this.count = 1
+    }
+
+    async display(){
+        welcomeScreen.classList.add(`hidden`);
+        gameScreen.classList.remove(`hidden`);
+        gameHeader.classList.add(`header2`);
+        body.style.backgroundColor = `Black`;
     }
 
     async task(){
@@ -71,7 +79,8 @@ class PurpleDoorGame {
             let randomColor = Math.random(colors.length);
             let color = colors[randomColor].name;
 
-            let door = await DoorService.getDoor(color, option);
+            let door = await DoorService.drawDoor(color, canvas, );
+            count++;
         }
     }
 }
@@ -79,14 +88,9 @@ class PurpleDoorGame {
 startButton.addEventListener(`click`, (e) => {
     e.preventDefault();
 
-    welcomeScreen.classList.add(`hidden`);
-    gameScreen.classList.remove(`hidden`);
-    gameHeader.classList.add(`header2`);
-    body.style.backgroundColor = `Black`;
-    
+    game = new PurpleDoorGame;
 
-    // game = new PurpleDoorGame;
-
+    game.display();
     // game.task();
     // game.door();
 });

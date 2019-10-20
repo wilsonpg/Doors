@@ -1,5 +1,20 @@
 `use strict`;
 
-getColors(
-    //query database to fetch all colors
-);
+getCount(() => {
+    /*
+    SELECT COUNT(*)
+    FROM colors;
+    */
+});
+
+getColors(color => {
+    // main (){
+    //     /*
+    //     SELECT name
+    //     FROM colors
+    //     WHERE id = ${ color };
+    //     */
+    // }
+    // main();
+
+});
