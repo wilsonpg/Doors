@@ -31994,7 +31994,6 @@ module.exports = async function getQuestionAndAnswers(question){
     
 };
 },{"mysql2/promise":280}],185:[function(require,module,exports){
-index.js
 `use strict`;
 
 let RiddleService = require(`./RiddleService`);
