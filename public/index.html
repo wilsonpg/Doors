@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>The Purple Door</title>
+
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body id="body">
+        <div id="wrapper">
+            <div id="welcomeScreen">
+                <header>The Purple Door</header>
+                <div>
+                Welcome to the hunt for <b>The Purple Door</b>.  In this game, you will be traveling through a potentially endless array of doors in<br>
+                search of the ever-elusive and mysterious "Purple Door".  Behind this Door lies a treasure so grand that explorers from all <br>
+                over the internet travel here to seek it out.  To begin your own journey, simply press the button below.  Good Luck!
+                <br><br><br>
+                <button id="startButton" class="button">Begin the Adventure!</button>
+                </div>
+            </div>
+            <div id="gameScreen" class="hidden">
+                <header id="gameHeader">The Purple Door</header>
+                <div>
+                    <label id="promptLabel"></label>
+                </div>
+                <canvas id="door1" width="350" height="350"></canvas>
+                <canvas id="door2" width="350" height="350"></canvas>
+                <canvas id="door3" width="350" height="350"></canvas>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label id="answerLabel1"></label>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label id="answerLabel2"></label>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label id="answerLabel3"></label>
+            </div>
+            <div id="purpleDoorScreen" class="hidden">
+                <header id="gameHeader">The Purple Door</header>
+                <div>
+                    <label id="promptLabel"></label>
+                </div>
+                <canvas id="purpleDoor"></canvas>
+            </div>
+            <div id="victoryScreen" class="hidden">
+                <header>The Purple Door</header>
+            </div>
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
