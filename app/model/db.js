@@ -8,7 +8,7 @@ let connection = mysql.createConnection({
     port: 3306,
     user: `root`,
     password: `wilson`,
-    database: `sys`
+    database: `doors`
 });
 
 connection.connect();

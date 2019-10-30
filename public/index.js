@@ -1,9 +1,6 @@
 `use strict`;
 
 /* 
-Important commands:
-
-Using Node js shell - 
 1. node server.js
 */
 
@@ -26,12 +23,13 @@ const door2 = document.getElementById(`door2`);
 const door3 = document.getElementById(`door3`);
 
 //initialized variable for site visit
-let purpleDoorGame, usedRiddles = [], colors = [], answers = [];
+ let usedRiddles = [], purpleDoorGame, colors = [];
 
-
+//game class
 class PurpleDoorGame {
 
     constructor() {
+        this.answers = []
     }
 
     showGame() {
@@ -49,69 +47,33 @@ class PurpleDoorGame {
     }
 
     async task() {
-        //determining task type, can implement more later
-        // let randomTask = Math.random(2) + 1;
+        return new Promise(async (resolve, reject) => {
+            let riddleCount = await this.getRiddleCount();
+            let riddle = await this.getRiddle(riddleCount);
 
-        //riddle
-        // if(randomTask == 1){
-            // let running = true;
-            // while(running){
-                let riddleCount = await this.getRiddleCount();
-                let riddle = await this.getRiddle(riddleCount);
+            let riddleText = Object.values(riddle.riddle);
+            let answerText = Object.values(riddle.answerText);
+            let correctAnswer = Object.values(riddle.answerValidation);
 
-                let riddleText = Object.values(riddle.riddle);
-                let answerText = Object.values(riddle.answerText);
-                let correctAnswer = Object.values(riddle.answerValidation);
+            this.answers = [
+                            {
+                                text: answerText[0],
+                                is_correct_answer: correctAnswer[0]
+                            },
+                            {
+                                text: answerText[1],
+                                is_correct_answer: correctAnswer[1]
+                            },
+                            {
+                                text: answerText[2],
+                                is_correct_answer: correctAnswer[2]
+                            }
+                        ];
 
-                answers = [
-                                {
-                                    text: answerText[0],
-                                    is_correct_answer: correctAnswer[0]
-                                },
-                                {
-                                    text: answerText[1],
-                                    is_correct_answer: correctAnswer[1]
-                                },
-                                {
-                                    text: answerText[2],
-                                    is_correct_answer: correctAnswer[2]
-                                }
-                            ];
+                promptLabel.innerHTML = riddleText;
 
-                //if the riddle has not been used already
-                // if (!usedRiddles.find(ur => ur.question.id == randomRiddle.question.id)) {
-                    //use riddle
-                    promptLabel.innerHTML = riddleText;
-                    //send answers to options array
-                    let answerCount = 1;
-                    for (let answer of answers) {
-                        console.log(answer);
-                        if (answerCount == 1) {
-                            answerLabel1.innerHTML = answer.text;
-                        }
-                        else if (answerCount == 2) {
-                            answerLabel2.innerHTML = answer.text;
-                        }
-                        else if (answerCount == 3) {
-                            answerLabel3.innerHTML = answer.text;
-                        }
-                        answerCount++;
-                    }
-                    //add riddle to array after used
-                    // usedRiddles.push(randomRiddle);
-                    // running = false;
-            // }
-        // }
-        // // task 2
-        // Math?
-        // else if(randomTask == 2){
-
-        // }
-        // // task 3
-        // History / trivia?
-        // else if(randomTask == 3){
-
-        // }
+                resolve(this.answers);
+        });
     }
 
     async getRiddleCount() {
@@ -152,11 +114,9 @@ class PurpleDoorGame {
         });
     }
 
-    async createDoors(colors) {
+    async createDoors(colors, answers) {
         //check for purple door
-        console.log(colors.find(c => c.is_purple_door == 1));
         if(colors.find(c => c.is_purple_door == 1)){
-            console.log(`1`);
             let purpleIndex = colors.findIndex(c => c.is_purple_door == 1);
             this.drawPurpleDoor(colors[purpleIndex].name);
         }
@@ -164,18 +124,20 @@ class PurpleDoorGame {
             let count = 1;
             //draw 3 doors
             for (let color of colors) {
-                this.drawDoor(color, count);
+                this.drawDoor(color, count, answers);
                 count++;
             }
         }
         
     }
 
-    drawDoor(color, door) {
+    drawDoor(color, door, answers) {
+        let answerIndex = door - 1;
         if (door == 1) {
             const context = door1.getContext("2d");
+            context.clearRect(0, 0, door1.width, door1.height);
             context.beginPath();
-            context.rect(100, 20, 150, 300);
+            context.rect(100, 20, 135, 300);
             context.fillStyle = color.name;
             context.fill();
             context.moveTo(130 , 150);
@@ -183,9 +145,15 @@ class PurpleDoorGame {
             context.lineTo(125, 120);
             context.lineTo(130, 120);
             context.stroke();
+
+            context.textBaseline = "bottom";
+            context.font = "20px Arial";
+            context.fillStyle = `Black`;
+            context.fillText(answers[answerIndex].text, 135, 350);
         }
         else if (door == 2) {
             const context = door2.getContext("2d");
+            context.clearRect(0, 0, door2.width, door2.height);
             context.beginPath();
             context.rect(100, 20, 150, 300);
             context.fillStyle = color.name;
@@ -195,9 +163,15 @@ class PurpleDoorGame {
             context.lineTo(125, 120);
             context.lineTo(130, 120);
             context.stroke();
+
+            context.textBaseline = "bottom";
+            context.font = "20px Arial";
+            context.fillStyle = `Black`;
+            context.fillText(answers[answerIndex].text, 135, 350);
         }
         else if (door == 3) {
             const context = door3.getContext("2d");
+            context.clearRect(0, 0, door3.width, door3.height);
             context.beginPath();
             context.rect(100, 20, 150, 300);
             context.fillStyle = color.name;
@@ -207,11 +181,19 @@ class PurpleDoorGame {
             context.lineTo(125, 120);
             context.lineTo(130, 120);
             context.stroke();
+
+            context.textBaseline = "bottom";
+            context.font = "20px Arial";
+            context.fillStyle = `Black`;
+            context.fillText(answers[answerIndex].text, 150, 350);
         }
     }
 
     drawPurpleDoor(purple){
+        promptLabel.innerHTML = ``;
+
         let context = door2.getContext("2d");
+        context.clearRect(0, 0, door2.width, door2.height);
         context.beginPath();
         context.rect(100, 20, 150, 300);
         context.fillStyle = purple;
@@ -228,6 +210,15 @@ class PurpleDoorGame {
         let context3 = door3.getContext("2d");
         context3.clearRect(0, 0, door3.width, door3.height);
     } 
+
+    checkForCorrect(door){
+        if(this.answers[door].is_correct_answer == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
 
 startButton.addEventListener(`click`, async (e) => {
@@ -237,7 +228,7 @@ startButton.addEventListener(`click`, async (e) => {
 
     let totalColors = await purpleDoorGame.getColorCount();
 
-    colors = [];
+    let colors = [];
     for (i = 0; i < 3; i++){
         let color = await purpleDoorGame.getColor(totalColors);
         colors.push(color);
@@ -245,50 +236,91 @@ startButton.addEventListener(`click`, async (e) => {
 
     purpleDoorGame.showGame();
 
-    purpleDoorGame.createDoors(colors);
+    let answers = await purpleDoorGame.task();
 
-    purpleDoorGame.task();
+    purpleDoorGame.createDoors(colors, answers);
 
 });
 
 door1.addEventListener(`click`, async (e) => {
     e.preventDefault();
 
-    
-}, false);
-
-door2.addEventListener(`click`, async (e) => {
-    e.preventDefault();
-    console.log(`i was clicked`);
-    answers = [{ is_correct_answer: 0 }, { is_correct_answer: 1 }]
-
-    if(colors.find(c => c.is_purple_door == 1)){
-        //purple door end screen stuff
-        console.log(`purple`);
-        purpleDoorGame.restartGame();
-    }
-    else if(answers[1].is_correct_answer == 1){
-        console.log(`correct answer`);
+    if(purpleDoorGame.checkForCorrect(0)){
         //generate new page
         purpleDoorGame = new PurpleDoorGame;
 
         let totalColors = await purpleDoorGame.getColorCount();
 
-        colors = [];
+        let colors = [];
         for (i = 0; i < 3; i++){
             let color = await purpleDoorGame.getColor(totalColors);
             colors.push(color);
         }
-        console.log(colors);
+        let answers = await purpleDoorGame.task();
 
-        purpleDoorGame.createDoors(colors);
+        purpleDoorGame.createDoors(colors, answers);
     }
     else{
-        console.log(`incorrect`);
         purpleDoorGame = new PurpleDoorGame;
 
         purpleDoorGame.restartGame();
     }
-}, false);
+    
+});
 
+door2.addEventListener(`click`, async (e) => {
+    e.preventDefault();
+
+    if(colors.find(c => c.is_purple_door == 1)){
+        //purple door end screen stuff
+        purpleDoorGame.restartGame();
+    }
+    else if(purpleDoorGame.checkForCorrect(1)){
+        //generate new page
+        purpleDoorGame = new PurpleDoorGame;
+
+        let totalColors = await purpleDoorGame.getColorCount();
+
+        let colors = [];
+        for (i = 0; i < 3; i++){
+            let color = await purpleDoorGame.getColor(totalColors);
+            colors.push(color);
+        }
+
+        let answers = await purpleDoorGame.task();
+
+        purpleDoorGame.createDoors(colors, answers);
+    }
+    else{
+        purpleDoorGame = new PurpleDoorGame;
+
+        purpleDoorGame.restartGame();
+    }
+});
+
+door3.addEventListener(`click`, async (e) => {
+    e.preventDefault();
+
+    if(purpleDoorGame.checkForCorrect(2)){
+        //generate new page
+        purpleDoorGame = new PurpleDoorGame;
+
+        let totalColors = await purpleDoorGame.getColorCount();
+
+        let colors = [];
+        for (i = 0; i < 3; i++){
+            let color = await purpleDoorGame.getColor(totalColors);
+            colors.push(color);
+        }
+        let answers = await purpleDoorGame.task();
+
+        purpleDoorGame.createDoors(colors, answers);
+    }
+    else{
+        purpleDoorGame = new PurpleDoorGame;
+
+        purpleDoorGame.restartGame();
+    }
+    
+});
 
