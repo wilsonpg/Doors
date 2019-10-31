@@ -22,6 +22,13 @@ const door1 = document.getElementById(`door1`);
 const door2 = document.getElementById(`door2`);
 const door3 = document.getElementById(`door3`);
 
+const dragonScreen = document.getElementById(`dragonScreen`);
+const dragonMoveLabel = document.getElementById(`dragonMoveLabel`);
+const fightButton = document.getElementById(`fightButton`);
+const moveOne = document.getElementById(`moveOne`);
+const moveTwo = document.getElementById(`moveTwo`);
+const moveThree = document.getElementById(`moveThree`);
+
 //initialized variable for site visit
  let usedRiddles = [], purpleDoorGame, colors = [];
 
@@ -137,7 +144,7 @@ class PurpleDoorGame {
             const context = door1.getContext("2d");
             context.clearRect(0, 0, door1.width, door1.height);
             context.beginPath();
-            context.rect(100, 20, 135, 300);
+            context.rect(100, 20, 150, 300);
             context.fillStyle = color.name;
             context.fill();
             context.moveTo(130 , 150);
@@ -185,7 +192,7 @@ class PurpleDoorGame {
             context.textBaseline = "bottom";
             context.font = "20px Arial";
             context.fillStyle = `Black`;
-            context.fillText(answers[answerIndex].text, 150, 350);
+            context.fillText(answers[answerIndex].text, 135, 350);
         }
     }
 
@@ -219,6 +226,12 @@ class PurpleDoorGame {
             return false;
         }
     }
+
+    enterPurpleDoor(){
+        console.log(`entered`);
+        gameScreen.classList.add(`hidden`);
+        dragonScreen.classList.remove(`hidden`);
+    }
 }
 
 startButton.addEventListener(`click`, async (e) => {
@@ -228,7 +241,7 @@ startButton.addEventListener(`click`, async (e) => {
 
     let totalColors = await purpleDoorGame.getColorCount();
 
-    let colors = [];
+    colors = [];
     for (i = 0; i < 3; i++){
         let color = await purpleDoorGame.getColor(totalColors);
         colors.push(color);
@@ -251,7 +264,7 @@ door1.addEventListener(`click`, async (e) => {
 
         let totalColors = await purpleDoorGame.getColorCount();
 
-        let colors = [];
+        colors = [];
         for (i = 0; i < 3; i++){
             let color = await purpleDoorGame.getColor(totalColors);
             colors.push(color);
@@ -273,7 +286,7 @@ door2.addEventListener(`click`, async (e) => {
 
     if(colors.find(c => c.is_purple_door == 1)){
         //purple door end screen stuff
-        purpleDoorGame.restartGame();
+        purpleDoorGame.enterPurpleDoor();
     }
     else if(purpleDoorGame.checkForCorrect(1)){
         //generate new page
@@ -281,7 +294,7 @@ door2.addEventListener(`click`, async (e) => {
 
         let totalColors = await purpleDoorGame.getColorCount();
 
-        let colors = [];
+        colors = [];
         for (i = 0; i < 3; i++){
             let color = await purpleDoorGame.getColor(totalColors);
             colors.push(color);
@@ -307,7 +320,7 @@ door3.addEventListener(`click`, async (e) => {
 
         let totalColors = await purpleDoorGame.getColorCount();
 
-        let colors = [];
+        colors = [];
         for (i = 0; i < 3; i++){
             let color = await purpleDoorGame.getColor(totalColors);
             colors.push(color);
@@ -324,3 +337,18 @@ door3.addEventListener(`click`, async (e) => {
     
 });
 
+fightButton.addEventListener(`click`, (e) => {
+    e.preventDefault();
+    console.log(`fight!`);
+    fightButton.classList.remove(`button`);
+    fightButton.classList.add(`hidden`);
+    moveOne.classList.remove(`hidden`);
+    moveOne.classList.add(`button`);
+    moveTwo.classList.remove(`hidden`);
+    moveTwo.classList.add(`button`);
+    moveThree.classList.remove(`hidden`);
+    moveThree.classList.add(`button`);
+    
+
+    // let dragonGame = new dragonGame();
+});

@@ -26,15 +26,28 @@
                 <canvas id="door2" width="350" height="350"></canvas>
                 <canvas id="door3" width="350" height="350"></canvas>
             </div>
-            <div id="purpleDoorScreen" class="hidden">
-                <header id="gameHeader">The Purple Door</header>
+            <div id="dragonScreen" class="hidden">
+                <header class="header2">The Purple Door</header>
                 <div>
-                    <label id="promptLabel"></label>
+                    <label id="dragonMoveLabel">Oh no! A dragon has already claimed the treasure as its own! <br> 
+                        Upon seeing you enter through the purple door, it attacks!
+                    </label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button id="fightButton" class="button">Click Here to Defend Yourself!</button>
                 </div>
-                <canvas id="purpleDoor"></canvas>
-            </div>
-            <div id="victoryScreen" class="hidden">
-                <header>The Purple Door</header>
+                <br>
+                <progress id="userHealth" value="100" max="100" class="percent"></progress>
+                <progress id="dragonHealth" value="100" max="100" class="pull-right" class="percent"></progress>
+                <br>
+                <canvas id="user" width="350" height="350"></canvas>
+                <canvas id="dragon" width="350" height="350" class="pull-right"></canvas>
+                <br><br>
+                <button id="moveOne" class="hidden">moveOne</button>
+                <button id="moveTwo" class="hidden">moveTwo</button>
+                <button id="moveThree" class="hidden">moveThree</button>
+                <div>
+                    <label id="userMoveLabel">User move status</label>
+                </div>
             </div>
         </div>
         <script src="index.js"></script>
