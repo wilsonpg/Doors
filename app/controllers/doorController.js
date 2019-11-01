@@ -1,4 +1,4 @@
-const Doors = require('../model/appModel.js');
+const Doors = require('../model/doorModel.js');
 
 exports.getColorCount = function(req, res) {
     Doors.getColorCount(function(err, count) {

@@ -23,14 +23,36 @@ const door2 = document.getElementById(`door2`);
 const door3 = document.getElementById(`door3`);
 
 const dragonScreen = document.getElementById(`dragonScreen`);
+
 const dragonMoveLabel = document.getElementById(`dragonMoveLabel`);
 const fightButton = document.getElementById(`fightButton`);
+const dragonMove = document.getElementById(`dragonMove`);
+
 const moveOne = document.getElementById(`moveOne`);
 const moveTwo = document.getElementById(`moveTwo`);
 const moveThree = document.getElementById(`moveThree`);
 
+const dragon = document.getElementById(`dragon`);
+const user = document.getElementById(`user`);
+
 //initialized variable for site visit
  let usedRiddles = [], purpleDoorGame, colors = [];
+
+ let dragonGame;
+ let dragonImage = new Image();
+ dragonImage.src = `./dragon.png`;
+ 
+ class DragonGame{
+     constructor() {
+         this.dragonHealth = 100;
+         this.userHealth = 100;
+     }
+ 
+     drawDragon(){
+         const context = dragon.getContext("2d");
+         context.drawImage(dragonImage, 0, 0);
+     }
+ }
 
 //game class
 class PurpleDoorGame {
@@ -156,7 +178,7 @@ class PurpleDoorGame {
             context.textBaseline = "bottom";
             context.font = "20px Arial";
             context.fillStyle = `Black`;
-            context.fillText(answers[answerIndex].text, 135, 350);
+            context.fillText(answers[answerIndex].text, 100, 350);
         }
         else if (door == 2) {
             const context = door2.getContext("2d");
@@ -174,7 +196,7 @@ class PurpleDoorGame {
             context.textBaseline = "bottom";
             context.font = "20px Arial";
             context.fillStyle = `Black`;
-            context.fillText(answers[answerIndex].text, 135, 350);
+            context.fillText(answers[answerIndex].text, 100, 350);
         }
         else if (door == 3) {
             const context = door3.getContext("2d");
@@ -192,7 +214,7 @@ class PurpleDoorGame {
             context.textBaseline = "bottom";
             context.font = "20px Arial";
             context.fillStyle = `Black`;
-            context.fillText(answers[answerIndex].text, 135, 350);
+            context.fillText(answers[answerIndex].text, 100, 350);
         }
     }
 
@@ -228,9 +250,11 @@ class PurpleDoorGame {
     }
 
     enterPurpleDoor(){
-        console.log(`entered`);
         gameScreen.classList.add(`hidden`);
         dragonScreen.classList.remove(`hidden`);
+        dragonGame = new DragonGame();
+        dragonGame.drawDragon();
+        // dragonGame.drawUser();
     }
 }
 
@@ -348,7 +372,7 @@ fightButton.addEventListener(`click`, (e) => {
     moveTwo.classList.add(`button`);
     moveThree.classList.remove(`hidden`);
     moveThree.classList.add(`button`);
+    dragonMove.classList.remove(`hidden`);
+    dragonMove.classList.add(`button`);
     
-
-    // let dragonGame = new dragonGame();
 });

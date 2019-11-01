@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function Doors(app) {
-  const Doors = require(`../controllers/appController`);
+  const Doors = require(`../controllers/doorController`);
   
   // color routes
   app
