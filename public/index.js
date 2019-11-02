@@ -52,6 +52,24 @@ const user = document.getElementById(`user`);
          const context = dragon.getContext("2d");
          context.drawImage(dragonImage, 0, 0);
      }
+
+     async getUserAttack(){
+        return new Promise(async (resolve, reject) => {
+            const userAttackCountResponse = await fetch(`http://localhost:8080/user/attack/count`);
+            let userAttackCount = await userAttackCountResponse.json();
+
+            let attacks = [];
+            for(let i = 0; i < 3; i += 1){
+            let randomAttack = Math.floor((Math.random() * userAttackCount.userAttacks) + 1);
+            attacks.push(randomAttack);
+            }
+
+            const response = await fetch('http://localhost:8080/user/attack/info/' + attacks);
+            const userAttacks = await response.json();
+    
+            resolve(userAttacks);
+            });
+     }
  }
 
 //game class
@@ -361,7 +379,7 @@ door3.addEventListener(`click`, async (e) => {
     
 });
 
-fightButton.addEventListener(`click`, (e) => {
+fightButton.addEventListener(`click`, async (e) => {
     e.preventDefault();
     console.log(`fight!`);
     fightButton.classList.remove(`button`);
@@ -372,7 +390,10 @@ fightButton.addEventListener(`click`, (e) => {
     moveTwo.classList.add(`button`);
     moveThree.classList.remove(`hidden`);
     moveThree.classList.add(`button`);
-    dragonMove.classList.remove(`hidden`);
-    dragonMove.classList.add(`button`);
+    // add these to user move buttons.  Dragon move does not occur until after user move
+    // dragonMove.classList.remove(`hidden`);
+    // dragonMove.classList.add(`button`);
     
+    let userAttacks = await dragonGame.getUserAttack();
+    console.log(userAttacks);
 });

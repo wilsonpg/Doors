@@ -5,7 +5,12 @@ module.exports = function Dragons(app) {
   
   // color routes
   app
-    .route(`/user/attacks`)
+    .route(`/user/attack/count`)
+    .get(Dragons.getUserAttackCount, function(req, res){
+      res.send();
+    }),
+  app
+    .route(`/user/attack/info/:attacks`)
     .get(Dragons.getUserAttacks, function(req, res){
       res.send();
     });
