@@ -1,7 +1,6 @@
 <html>
     <head>
         <title>The Purple Door</title>
-
         <link rel="stylesheet" href="style.css">
     </head>
 
@@ -21,6 +20,9 @@
                 <header id="gameHeader">The Purple Door</header>
                 <div>
                     <label id="promptLabel"></label>
+                    <canvas id="lifeOne" width="30" height="29" class="pull-right"></canvas>
+                    <canvas id="lifeTwo" width="30" height="29" class="pull-right"></canvas>
+                    <canvas id="lifeThree" width="30" height="29" class="pull-right"></canvas>
                 </div>
                 <canvas id="door1" width="350" height="350"></canvas>
                 <canvas id="door2" width="350" height="350"></canvas>
@@ -35,20 +37,26 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <button id="fightButton" class="button">Click Here to Defend Yourself!</button>
                 </div>
-                <br>
                 <progress id="userHealth" value="100" max="100" class="percent"></progress>
                 <progress id="dragonHealth" value="100" max="100" class="pull-right" class="percent"></progress>
-                <br>
-                <canvas id="user" width="350" height="350"></canvas>
+                <br><br>
+                <canvas id="user" width="324" height="324"></canvas>
                 <canvas id="dragon" width="640" height="320" class="pull-right"></canvas>
                 <br><br>
                 <button id="moveOne" class="hidden">moveOne</button>
                 <button id="moveTwo" class="hidden">moveTwo</button>
                 <button id="moveThree" class="hidden">moveThree</button>
-
-                <button id="dragonMove" class="hidden" style="float: right;">dragonMove</button>
+                <button id="dragonMove" class="hidden" style="float: right; background-color: maroon">Dragon's Move</button>
                 <div>
-                    <label id="userMoveLabel">User move status</label>
+                    <label id="userMoveLabel"></label>
+                </div>
+            </div>
+            <div id="victoryScreen" class="hidden">
+                <header>The Purple Door</header>
+                <div>
+                    <label>Congratulations!</label>
+                    <br>
+                    <canvas id="treasure" width="640" height="448" style="position: relative; left: 20%;"></canvas>
                 </div>
             </div>
         </div>

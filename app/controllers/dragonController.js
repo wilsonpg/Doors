@@ -19,3 +19,23 @@ exports.getUserAttacks = function(req, res) {
       res.json(attacks);
     });
   };
+
+  exports.getDragonAttackCount = function(req, res) {
+    Dragons.getDragonAttackCount(function(err, count) {
+  
+      if (err){
+        res.send(err);
+      }
+      res.json(count);
+    });
+  };
+
+  exports.getDragonAttack = function(req, res) {
+    Dragons.getDragonAttack(req.params.attack, function(err, attack) {
+  
+      if (err){
+        res.send(err);
+      }
+      res.json(attack);
+    });
+  };

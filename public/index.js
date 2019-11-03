@@ -14,6 +14,9 @@ const gameScreen = document.getElementById(`gameScreen`);
 const gameHeader = document.getElementById(`gameHeader`);
 
 const promptLabel = document.getElementById(`promptLabel`);
+const lifeOne = document.getElementById(`lifeOne`);
+const lifeTwo = document.getElementById(`lifeTwo`);
+const lifeThree = document.getElementById(`lifeThree`);
 const answerLabel1 = document.getElementById(`answerLabel1`);
 const answerLabel2 = document.getElementById(`answerLabel2`);
 const answerLabel3 = document.getElementById(`answerLabel3`);
@@ -25,6 +28,7 @@ const door3 = document.getElementById(`door3`);
 const dragonScreen = document.getElementById(`dragonScreen`);
 
 const dragonMoveLabel = document.getElementById(`dragonMoveLabel`);
+const userMoveLabel = document.getElementById(`userMoveLabel`);
 const fightButton = document.getElementById(`fightButton`);
 const dragonMove = document.getElementById(`dragonMove`);
 
@@ -35,23 +39,63 @@ const moveThree = document.getElementById(`moveThree`);
 const dragon = document.getElementById(`dragon`);
 const user = document.getElementById(`user`);
 
+const victoryScreen = document.getElementById(`victoryScreen`);
+const treasure = document.getElementById(`treasure`);
+
 //initialized variable for site visit
- let usedRiddles = [], purpleDoorGame, colors = [];
+ let usedRiddles = [], purpleDoorGame, colors = [], lives = [1, 2, 3], userAttacks;
 
  let dragonGame;
+
  let dragonImage = new Image();
  dragonImage.src = `./dragon.png`;
+ let userImage = new Image();
+ userImage.src = `./wizard.png`;
+ let lifeImage = new Image();
+ lifeImage.src = `./heart.png`;
+ let treasureImage = new Image();
+ treasureImage.src = `./treasure.png`;
  
  class DragonGame{
      constructor() {
-         this.dragonHealth = 100;
-         this.userHealth = 100;
      }
  
      drawDragon(){
          const context = dragon.getContext("2d");
          context.drawImage(dragonImage, 0, 0);
      }
+
+     drawUser(){
+        const context = user.getContext("2d");
+        context.drawImage(userImage, 0, 0);
+    }
+
+    pageSetup(){
+        fightButton.classList.remove(`button`);
+        fightButton.classList.add(`hidden`);
+        moveOne.classList.remove(`hidden`);
+        moveOne.classList.add(`button`);
+        moveTwo.classList.remove(`hidden`);
+        moveTwo.classList.add(`button`);
+        moveThree.classList.remove(`hidden`);
+        moveThree.classList.add(`button`);
+        userMoveLabel.innerHTML = `Above are the possible moves for defending against the dragon.
+        Each attack has a damage number which is specified in parentheses () as well as a hidden resistance percentage based on both element and power.
+        As a general rule, the higher the damage, the higher the likelihood that the attack is resisted.  Choose wisely.`;
+        dragonMoveLabel.innerHTML = ``;
+    }
+
+    dragonMoveSetup(){
+        moveOne.classList.remove(`hidden`);
+        moveOne.classList.add(`button`);
+        moveTwo.classList.remove(`hidden`);
+        moveTwo.classList.add(`button`);
+        moveThree.classList.remove(`hidden`);
+        moveThree.classList.add(`button`);
+        dragonMove.classList.remove(`button`);
+        dragonMove.classList.add(`hidden`);
+        userMoveLabel.innerHTML = ``;
+    }
 
      async getUserAttack(){
         return new Promise(async (resolve, reject) => {
@@ -60,15 +104,75 @@ const user = document.getElementById(`user`);
 
             let attacks = [];
             for(let i = 0; i < 3; i += 1){
-            let randomAttack = Math.floor((Math.random() * userAttackCount.userAttacks) + 1);
-            attacks.push(randomAttack);
+                let randomAttack = Math.floor((Math.random() * userAttackCount.userAttacks) + 1);
+
+                if(!attacks.find(a => a == randomAttack)){
+                    attacks.push(randomAttack);
+                }
+                else{
+                    i -= 1;
+                }
             }
 
             const response = await fetch('http://localhost:8080/user/attack/info/' + attacks);
             const userAttacks = await response.json();
     
             resolve(userAttacks);
-            });
+        });
+     }
+
+     async getDragonAttack(){
+        return new Promise(async (resolve, reject) => {
+            const dragonAttackCountResponse = await fetch(`http://localhost:8080/dragon/attack/count`);
+            let dragonAttackCount = await dragonAttackCountResponse.json();
+
+            let randomAttack = Math.floor((Math.random() * dragonAttackCount.dragonAttacks) + 1);
+
+            const response = await fetch('http://localhost:8080/dragon/attack/info/' + randomAttack);
+            const dragonAttack = await response.json();
+    
+            resolve(dragonAttack);
+        });
+     }
+
+     async setUserMoves(userAttacks){
+        moveOne.innerHTML = userAttacks[0].text + ` (` + userAttacks[0].damage + `)`;
+        moveOne.style.background = userAttacks[0].element_color;
+
+        moveTwo.innerHTML = userAttacks[1].text + ` (` + userAttacks[1].damage + `)`;
+        moveTwo.style.background = userAttacks[1].element_color;
+
+        moveThree.innerHTML = userAttacks[2].text + ` (` + userAttacks[2].damage + `)`;
+        moveThree.style.background = userAttacks[2].element_color;
+     }
+
+     moveSetup(){
+        moveOne.classList.add(`hidden`);
+        moveOne.classList.remove(`button`);
+        moveTwo.classList.add(`hidden`);
+        moveTwo.classList.remove(`button`);
+        moveThree.classList.add(`hidden`);
+        moveThree.classList.remove(`button`);
+        dragonMove.classList.remove(`hidden`);
+        dragonMove.classList.add(`button`);
+     }
+
+     checkIfResisted(resist_percentage){
+        let randomNumber = Math.random();
+        if(randomNumber <= resist_percentage){
+            return true;
+        }
+        else{
+            return false;
+        }
+     }
+
+     victoryScreen(){
+        dragonScreen.classList.add(`hidden`);
+        victoryScreen.classList.remove(`hidden`);
+        body.style.backgroundColor = `Magenta`;
+        const context = treasure.getContext("2d");
+        context.drawImage(treasureImage, 0, 0);
      }
  }
 
@@ -77,6 +181,17 @@ class PurpleDoorGame {
 
     constructor() {
         this.answers = []
+    }
+
+    displayLives(){
+        const context1 = lifeOne.getContext("2d");
+        context1.drawImage(lifeImage, 0, 0);
+
+        const context2 = lifeTwo.getContext("2d");
+        context2.drawImage(lifeImage, 0, 0);
+
+        const context3 = lifeThree.getContext("2d");
+        context3.drawImage(lifeImage, 0, 0);
     }
 
     showGame() {
@@ -91,6 +206,12 @@ class PurpleDoorGame {
         gameScreen.classList.add(`hidden`);
         gameHeader.classList.remove(`header2`);
         body.style.backgroundColor = `Magenta`;
+        lifeThree.classList.remove(`hidden`);
+        lifeTwo.classList.remove(`hidden`);
+
+        lives = [1, 2, 3];
+        colors = [];
+        usedRiddles = [];
     }
 
     async task() {
@@ -163,6 +284,8 @@ class PurpleDoorGame {
 
     async createDoors(colors, answers) {
         //check for purple door
+        // colors[0].is_purple_door = 1;
+        // colors[0].name = `Magenta`;
         if(colors.find(c => c.is_purple_door == 1)){
             let purpleIndex = colors.findIndex(c => c.is_purple_door == 1);
             this.drawPurpleDoor(colors[purpleIndex].name);
@@ -272,7 +395,7 @@ class PurpleDoorGame {
         dragonScreen.classList.remove(`hidden`);
         dragonGame = new DragonGame();
         dragonGame.drawDragon();
-        // dragonGame.drawUser();
+        dragonGame.drawUser();
     }
 }
 
@@ -280,6 +403,8 @@ startButton.addEventListener(`click`, async (e) => {
     e.preventDefault();
 
     purpleDoorGame = new PurpleDoorGame;
+
+    purpleDoorGame.displayLives();
 
     let totalColors = await purpleDoorGame.getColorCount();
 
@@ -316,9 +441,22 @@ door1.addEventListener(`click`, async (e) => {
         purpleDoorGame.createDoors(colors, answers);
     }
     else{
-        purpleDoorGame = new PurpleDoorGame;
+        if(lives.length > 1){
+            if(lives.length == 3){
+                lifeThree.classList.add(`hidden`);
+                lives.splice(2, 1);
+            }
+            else if(lives.length == 2){
+                lifeTwo.classList.add(`hidden`);
+                lives.splice(1, 1);
+            }
+        }
+        else if(lives.length == 1){
+            purpleDoorGame = new PurpleDoorGame;
 
-        purpleDoorGame.restartGame();
+            //take to loser screen prompt to try again
+            purpleDoorGame.restartGame();
+        }
     }
     
 });
@@ -347,9 +485,22 @@ door2.addEventListener(`click`, async (e) => {
         purpleDoorGame.createDoors(colors, answers);
     }
     else{
-        purpleDoorGame = new PurpleDoorGame;
+        if(lives.length > 1){
+            if(lives.length == 3){
+                lifeThree.classList.add(`hidden`);
+                lives.splice(2, 1);
+            }
+            else if(lives.length == 2){
+                lifeTwo.classList.add(`hidden`);
+                lives.splice(1, 1);
+            }
+        }
+        else if(lives.length == 1){
+            purpleDoorGame = new PurpleDoorGame;
 
-        purpleDoorGame.restartGame();
+            //take to loser screen prompt to try again
+            purpleDoorGame.restartGame();
+        }
     }
 });
 
@@ -372,28 +523,131 @@ door3.addEventListener(`click`, async (e) => {
         purpleDoorGame.createDoors(colors, answers);
     }
     else{
-        purpleDoorGame = new PurpleDoorGame;
+        if(lives.length > 1){
+            if(lives.length == 3){
+                lifeThree.classList.add(`hidden`);
+                lives.splice(2, 1);
+            }
+            else if(lives.length == 2){
+                lifeTwo.classList.add(`hidden`);
+                lives.splice(1, 1);
+            }
+        }
+        else if(lives.length == 1){
+            purpleDoorGame = new PurpleDoorGame;
 
-        purpleDoorGame.restartGame();
+            //take to loser screen prompt to try again
+            purpleDoorGame.restartGame();
+        }
     }
     
 });
 
 fightButton.addEventListener(`click`, async (e) => {
     e.preventDefault();
-    console.log(`fight!`);
-    fightButton.classList.remove(`button`);
-    fightButton.classList.add(`hidden`);
-    moveOne.classList.remove(`hidden`);
-    moveOne.classList.add(`button`);
-    moveTwo.classList.remove(`hidden`);
-    moveTwo.classList.add(`button`);
-    moveThree.classList.remove(`hidden`);
-    moveThree.classList.add(`button`);
-    // add these to user move buttons.  Dragon move does not occur until after user move
-    // dragonMove.classList.remove(`hidden`);
-    // dragonMove.classList.add(`button`);
+
+    dragonGame.pageSetup();
     
-    let userAttacks = await dragonGame.getUserAttack();
-    console.log(userAttacks);
+    userAttacks;
+    userAttacks = await dragonGame.getUserAttack();
+    
+    await dragonGame.setUserMoves(userAttacks);
+});
+
+moveOne.addEventListener(`click`, (e) => {
+    e.preventDefault();
+
+    dragonGame.moveSetup();
+
+    let resisted = dragonGame.checkIfResisted(userAttacks[0].resist_percentage);
+
+    if(!resisted){
+        userMoveLabel.innerHTML = `Your ` + userAttacks[0].text + ` attack dealt ` + userAttacks[0].damage + ` damage!`;
+        dragonHealth.value = dragonHealth.value - userAttacks[0].damage;
+    }
+    else{
+        userMoveLabel.innerHTML = `Oh no! Your ` + userAttacks[0].text + ` attack was resisted and dealt no damage!`;
+    }
+
+    if(dragonHealth.value == 0){
+        dragonGame.victoryScreen();
+    }
+    else{
+        dragonMoveLabel.innerHTML = ``;
+    }
+});
+
+moveTwo.addEventListener(`click`, (e) => {
+    e.preventDefault();
+
+    dragonGame.moveSetup();
+
+    let resisted = dragonGame.checkIfResisted(userAttacks[1].resist_percentage);
+
+    if(!resisted){
+        userMoveLabel.innerHTML = `Your ` + userAttacks[1].text + ` attack dealt ` + userAttacks[1].damage + ` damage!`;
+        dragonHealth.value = dragonHealth.value - userAttacks[1].damage;
+    }
+    else{
+        userMoveLabel.innerHTML = `Oh no! Your ` + userAttacks[1].text + ` attack was resisted and dealt no damage!`;
+    }
+
+    if(dragonHealth.value == 0){
+        dragonGame.victoryScreen();
+    }
+    else{
+        dragonMoveLabel.innerHTML = ``;
+    }
+});
+
+moveThree.addEventListener(`click`, (e) => {
+    e.preventDefault();
+
+    dragonGame.moveSetup();
+
+    let resisted = dragonGame.checkIfResisted(userAttacks[2].resist_percentage);
+
+    if(!resisted){
+        userMoveLabel.innerHTML = `Your ` + userAttacks[2].text + ` attack dealt ` + userAttacks[2].damage + ` damage!`;
+        dragonHealth.value = dragonHealth.value - userAttacks[2].damage;
+    }
+    else{
+        userMoveLabel.innerHTML = `Oh no! Your ` + userAttacks[2].text + ` attack was resisted and dealt no damage!`;
+    }
+
+    if(dragonHealth.value == 0){
+        dragonGame.victoryScreen()
+    }
+    else{
+        dragonMoveLabel.innerHTML = ``;
+    }
+});
+
+dragonMove.addEventListener(`click`, async (e) => {
+    e.preventDefault();
+
+    let dragonAttack = await dragonGame.getDragonAttack();
+
+    let resisted = dragonGame.checkIfResisted(dragonAttack.resist_percentage);
+
+    if(!resisted){
+        dragonMoveLabel.innerHTML = `The dragon's ` + dragonAttack.text + ` attack dealt ` + dragonAttack.damage + ` damage!`;
+        userHealth.value = userHealth.value - dragonAttack.damage;
+    }
+    else{
+        dragonMoveLabel.innerHTML = `Nice!  The dragon's ` + dragonAttack.text + ` attack was resisted and dealt no damage!`;
+    }
+
+    if(userHealth.value == 0){
+        //take to loser screen prompt to try again
+        location.reload();
+    }
+    else{
+        dragonGame.dragonMoveSetup();
+    
+        userAttacks;
+        userAttacks = await dragonGame.getUserAttack();
+        
+        await dragonGame.setUserMoves(userAttacks);
+    }
 });

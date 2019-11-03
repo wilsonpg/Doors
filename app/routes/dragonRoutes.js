@@ -13,5 +13,15 @@ module.exports = function Dragons(app) {
     .route(`/user/attack/info/:attacks`)
     .get(Dragons.getUserAttacks, function(req, res){
       res.send();
+    }),
+  app
+    .route(`/dragon/attack/count`)
+    .get(Dragons.getDragonAttackCount, function(req, res){
+      res.send();
+    }),
+  app
+    .route(`/dragon/attack/info/:attack`)
+    .get(Dragons.getDragonAttack, function(req, res){
+      res.send();
     });
 }
