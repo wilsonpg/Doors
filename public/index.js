@@ -2,6 +2,7 @@
 
 /* 
 1. node server.js
+2. Use clearDB add on in tandem with heroku / github
 */
 
 //html dom elements
@@ -41,6 +42,7 @@ const user = document.getElementById(`user`);
 
 const victoryScreen = document.getElementById(`victoryScreen`);
 const treasure = document.getElementById(`treasure`);
+const playAgainVictory = document.getElementById(`playAgainVictory`);
 
 //initialized variable for site visit
  let usedRiddles = [], purpleDoorGame, colors = [], lives = [1, 2, 3], userAttacks;
@@ -216,8 +218,26 @@ class PurpleDoorGame {
 
     async task() {
         return new Promise(async (resolve, reject) => {
+            //length of total riddles I've added so that application doesnt crash when it runs out
+            if(usedRiddles.length == 20){
+                usedRiddles = [];
+            }
             let riddleCount = await this.getRiddleCount();
-            let riddle = await this.getRiddle(riddleCount);
+
+            let riddle;
+            for(let i = 0; i < 1; i++){
+                riddle = await this.getRiddle(riddleCount);
+                console.log(Object.keys(riddle.riddle)[0]);
+                console.log(usedRiddles.find(ur => { return ur.id == Object.keys(riddle.riddle)[0] }));
+                if(usedRiddles.find(ur => { return ur.id == Object.keys(riddle.riddle)[0] })){
+                    i -= 1;
+                }
+            }
+            let usedRiddle = {
+                id: Object.keys(riddle.riddle)[0]
+            }
+            usedRiddles.push(usedRiddle);
+            console.log(usedRiddles);
 
             let riddleText = Object.values(riddle.riddle);
             let answerText = Object.values(riddle.answerText);
@@ -254,13 +274,13 @@ class PurpleDoorGame {
     }
 
     async getRiddle(riddleCount) {
-        return new Promise(async (resolve, reject) => {
-            let randomRiddle = Math.floor((Math.random() * riddleCount) + 1);
-            const response = await fetch('http://localhost:8080/riddle/' + randomRiddle);
-            const riddleObject = await response.json();
+            return new Promise(async (resolve, reject) => {
+                let randomRiddle = Math.floor((Math.random() * riddleCount) + 1);
+                const response = await fetch('http://localhost:8080/riddle/' + randomRiddle);
+                const riddleObject = await response.json();
 
-            resolve(riddleObject);
-        });
+                resolve(riddleObject);
+            });
     }
 
     async getColorCount() {
@@ -284,8 +304,8 @@ class PurpleDoorGame {
 
     async createDoors(colors, answers) {
         //check for purple door
-        // colors[0].is_purple_door = 1;
-        // colors[0].name = `Magenta`;
+        colors[0].is_purple_door = 1;
+        colors[0].name = `Magenta`;
         if(colors.find(c => c.is_purple_door == 1)){
             let purpleIndex = colors.findIndex(c => c.is_purple_door == 1);
             this.drawPurpleDoor(colors[purpleIndex].name);
@@ -650,4 +670,10 @@ dragonMove.addEventListener(`click`, async (e) => {
         
         await dragonGame.setUserMoves(userAttacks);
     }
+});
+
+playAgainVictory.addEventListener(`click`, (e) => {
+    e.preventDefault();
+
+    location.reload();
 });
