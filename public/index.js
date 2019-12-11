@@ -281,6 +281,7 @@ class PurpleDoorGame {
 
     async getColorCount() {
         return new Promise(async (resolve, reject) => {
+            console.log(process.env.PORT);
         const response = await fetch(`http://localhost:${ process.env.PORT }/colors`);
         const colorCount = await response.json();
 
