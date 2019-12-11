@@ -4,11 +4,11 @@
   "description": "node app",
   "main": "server.js",
   "scripts": {
-  "start": "node server.js"
+    "start": "node server.js"
   },
   "repository": {
-  "type": "git",
-  "url": ""
+    "type": "git",
+    "url": ""
   },
   "devDependencies": {
     "eslint": "^6.5.1",
@@ -24,6 +24,7 @@
     "node": "^12.12.0",
     "require": "^2.4.20",
     "requirejs": "^2.3.6",
-    "simplehttpserver": "^0.3.0"
+    "simplehttpserver": "^0.3.0",
+    "mysql2": "^1.7.0"
   }
 }
