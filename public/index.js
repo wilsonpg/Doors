@@ -1,10 +1,5 @@
 `use strict`;
 
-/* 
-1. node server.js
-2. Use clearDB add on in tandem with heroku / github
-*/
-
 //html dom elements
 const body = document.getElementById(`body`);
 
@@ -43,6 +38,10 @@ const user = document.getElementById(`user`);
 const victoryScreen = document.getElementById(`victoryScreen`);
 const treasure = document.getElementById(`treasure`);
 const playAgainVictory = document.getElementById(`playAgainVictory`);
+
+const loserScreen = document.getElementById(`loserScreen`);
+const playAgainLost = document.getElementById(`playAgainLost`);
+const loserHeader = document.getElementById(`loserHeader`);
 
 //initialized variable for site visit
  let usedRiddles = [], purpleDoorGame, colors = [], lives = [1, 2, 3], userAttacks;
@@ -176,6 +175,12 @@ const playAgainVictory = document.getElementById(`playAgainVictory`);
         const context = treasure.getContext("2d");
         context.drawImage(treasureImage, 0, 0);
      }
+
+     restartGame(){
+        dragonScreen.classList.add(`hidden`);
+        loserScreen.classList.remove(`hidden`);
+        loserHeader.classList.add(`header2`);
+     }
  }
 
 //game class
@@ -204,16 +209,9 @@ class PurpleDoorGame {
     }
 
     restartGame(){
-        welcomeScreen.classList.remove(`hidden`);
+        loserScreen.classList.remove(`hidden`);
         gameScreen.classList.add(`hidden`);
-        gameHeader.classList.remove(`header2`);
-        body.style.backgroundColor = `Magenta`;
-        lifeThree.classList.remove(`hidden`);
-        lifeTwo.classList.remove(`hidden`);
-
-        lives = [1, 2, 3];
-        colors = [];
-        usedRiddles = [];
+        loserHeader.classList.add(`header2`);
     }
 
     async task() {
@@ -304,8 +302,8 @@ class PurpleDoorGame {
 
     async createDoors(colors, answers) {
         //check for purple door
-        colors[0].is_purple_door = 1;
-        colors[0].name = `Magenta`;
+        // colors[0].is_purple_door = 1;
+        // colors[0].name = `Magenta`;
         if(colors.find(c => c.is_purple_door == 1)){
             let purpleIndex = colors.findIndex(c => c.is_purple_door == 1);
             this.drawPurpleDoor(colors[purpleIndex].name);
@@ -660,7 +658,7 @@ dragonMove.addEventListener(`click`, async (e) => {
 
     if(userHealth.value == 0){
         //take to loser screen prompt to try again
-        location.reload();
+        dragonGame.restartGame();
     }
     else{
         dragonGame.dragonMoveSetup();
@@ -673,6 +671,12 @@ dragonMove.addEventListener(`click`, async (e) => {
 });
 
 playAgainVictory.addEventListener(`click`, (e) => {
+    e.preventDefault();
+
+    location.reload();
+});
+
+playAgainLost.addEventListener(`click`, (e) => {
     e.preventDefault();
 
     location.reload();
