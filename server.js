@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 app.use(express.static("./public"));
 
-const port = process.env.port || 8080;
+const port = process.env.port || 3000;
 
 app.listen(port, () => {
     console.log(`The app is running on port ${ port }...`);
