@@ -44,7 +44,7 @@ const playAgainLost = document.getElementById(`playAgainLost`);
 const loserHeader = document.getElementById(`loserHeader`);
 
 //initialized variable for site visit
- let usedRiddles = [], purpleDoorGame, colors = [], lives = [1, 2, 3], userAttacks, count = 0;
+ let usedRiddles = [], purpleDoorGame, colors = [], lives = [1, 2, 3], userAttacks, demonstration_limit = 0;
 
  let dragonGame;
 
@@ -300,7 +300,7 @@ class PurpleDoorGame {
 
     async createDoors(colors, answers) {
         //hard-coded limit set at 20
-        if(count == 20){
+        if(demonstration_limit == 20){
             colors[0].is_purple_door = 1;
             colors[0].name = `Magenta`;
         }
@@ -444,7 +444,7 @@ startButton.addEventListener(`click`, async (e) => {
 
 door1.addEventListener(`click`, async (e) => {
     e.preventDefault();
-    count += 1;
+    demonstration_limit += 1;
 
     if(purpleDoorGame.checkForCorrect(0)){
         //generate new page
@@ -484,7 +484,7 @@ door1.addEventListener(`click`, async (e) => {
 
 door2.addEventListener(`click`, async (e) => {
     e.preventDefault();
-    count += 1;
+    demonstration_limit += 1;
 
     if(colors.find(c => c.is_purple_door == 1)){
         //purple door end screen stuff
@@ -528,7 +528,7 @@ door2.addEventListener(`click`, async (e) => {
 
 door3.addEventListener(`click`, async (e) => {
     e.preventDefault();
-    count += 1;
+    demonstration_limit += 1;
 
     if(purpleDoorGame.checkForCorrect(2)){
         //generate new page
