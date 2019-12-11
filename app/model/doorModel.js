@@ -54,9 +54,9 @@ Doors.getRiddleCount = async function (result) {
 Doors.getRiddle = async function (riddle, result){
     await sql.execute(
         `SELECT 
-        JSON_OBJECTAGG(questions.id, questions.text) AS riddle,
-        JSON_OBJECTAGG(answers.id, answers.text) AS answerText,
-        JSON_OBJECTAGG(answers.id, answers.is_correct_answer) AS answerValidation
+        questions.text AS riddle,
+        GROUP_CONCAT(answers.text SEPARATOR ', ') AS answerText,
+        GROUP_CONCAT(answers.is_correct_answer SEPARATOR ', ') AS answerValidation
         FROM questions
         JOIN answers ON answers.question_id = questions.id
         WHERE questions.id = ${ riddle }

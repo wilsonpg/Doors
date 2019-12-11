@@ -225,21 +225,19 @@ class PurpleDoorGame {
             let riddle;
             for(let i = 0; i < 1; i++){
                 riddle = await this.getRiddle(riddleCount);
-                console.log(Object.keys(riddle.riddle)[0]);
-                console.log(usedRiddles.find(ur => { return ur.id == Object.keys(riddle.riddle)[0] }));
-                if(usedRiddles.find(ur => { return ur.id == Object.keys(riddle.riddle)[0] })){
+
+                if(usedRiddles.find(ur => { return ur.text == riddle.riddle })){
                     i -= 1;
                 }
             }
             let usedRiddle = {
-                id: Object.keys(riddle.riddle)[0]
+                text: riddle.riddle
             }
             usedRiddles.push(usedRiddle);
-            console.log(usedRiddles);
 
-            let riddleText = Object.values(riddle.riddle);
-            let answerText = Object.values(riddle.answerText);
-            let correctAnswer = Object.values(riddle.answerValidation);
+            let riddleText = riddle.riddle;
+            let answerText = riddle.answerText.split(`, `);
+            let correctAnswer = riddle.answerValidation.split(`, `);
 
             this.answers = [
                             {
