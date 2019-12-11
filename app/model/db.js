@@ -14,7 +14,7 @@ function handleDisconnect() {
                                                     
     connection.connect(function(err) {             
       if(err) {                                     
-        setTimeout(handleDisconnect, 2000); 
+        setTimeout(handleDisconnect); 
       }                                     
     });                                    
                                             
