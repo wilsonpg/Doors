@@ -19,6 +19,7 @@ function handleDisconnect() {
     });                                    
                                             
     connection.on(`error`, function(err) {
+        console.log(err.code);
       if(err.code === `PROTOCOL_CONNECTION_LOST`) {
         handleDisconnect();                         
       } else {                                     
