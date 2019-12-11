@@ -4,10 +4,8 @@ const bodyParser = require('body-parser');
 
 app.use(express.static("./public"));
 
-const port = process.env.PORT;
-
-app.listen(port, () => {
-    console.log(`The app is running on port ${ port }...`);
+app.listen(8080, () => {
+    console.log(`The app is running on port 8080...`);
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
