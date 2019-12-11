@@ -100,7 +100,7 @@ const loserHeader = document.getElementById(`loserHeader`);
 
      async getUserAttack(){
         return new Promise(async (resolve, reject) => {
-            const userAttackCountResponse = await fetch(`http://localhost:${ process.env.PORT }/user/attack/count`);
+            const userAttackCountResponse = await fetch(`https://the-purple-door.herokuapp.com/user/attack/count`);
             let userAttackCount = await userAttackCountResponse.json();
 
             let attacks = [];
@@ -115,7 +115,7 @@ const loserHeader = document.getElementById(`loserHeader`);
                 }
             }
 
-            const response = await fetch(`http://localhost:${ process.env.PORT }/user/attack/info/` + attacks);
+            const response = await fetch(`https://the-purple-door.herokuapp.com/user/attack/info/` + attacks);
             const userAttacks = await response.json();
     
             resolve(userAttacks);
@@ -124,12 +124,12 @@ const loserHeader = document.getElementById(`loserHeader`);
 
      async getDragonAttack(){
         return new Promise(async (resolve, reject) => {
-            const dragonAttackCountResponse = await fetch(`http://localhost:${ process.env.PORT }/dragon/attack/count`);
+            const dragonAttackCountResponse = await fetch(`https://the-purple-door.herokuapp.com/dragon/attack/count`);
             let dragonAttackCount = await dragonAttackCountResponse.json();
 
             let randomAttack = Math.floor((Math.random() * dragonAttackCount.dragonAttacks) + 1);
 
-            const response = await fetch(`http://localhost:${ process.env.PORT }/dragon/attack/info/` + randomAttack);
+            const response = await fetch(`https://the-purple-door.herokuapp.com/dragon/attack/info/` + randomAttack);
             const dragonAttack = await response.json();
     
             resolve(dragonAttack);
@@ -262,7 +262,7 @@ class PurpleDoorGame {
 
     async getRiddleCount() {
         return new Promise(async (resolve, reject) => {
-        const response = await fetch(`http://localhost:${ process.env.PORT }/riddles`);
+        const response = await fetch(`https://the-purple-door.herokuapp.com/riddles`);
         const riddleCount = await response.json();
 
         resolve(riddleCount.riddles);
@@ -272,7 +272,7 @@ class PurpleDoorGame {
     async getRiddle(riddleCount) {
             return new Promise(async (resolve, reject) => {
                 let randomRiddle = Math.floor((Math.random() * riddleCount) + 1);
-                const response = await fetch(`http://localhost:${ process.env.PORT }/riddle/` + randomRiddle);
+                const response = await fetch(`https://the-purple-door.herokuapp.com/riddle/` + randomRiddle);
                 const riddleObject = await response.json();
 
                 resolve(riddleObject);
@@ -281,8 +281,7 @@ class PurpleDoorGame {
 
     async getColorCount() {
         return new Promise(async (resolve, reject) => {
-            console.log(process.env.PORT);
-        const response = await fetch(`http://localhost:${ process.env.PORT }/colors`);
+        const response = await fetch(`https://the-purple-door.herokuapp.com/colors`);
         const colorCount = await response.json();
 
         resolve(colorCount.colors);
@@ -292,7 +291,7 @@ class PurpleDoorGame {
     async getColor(color) {
         return new Promise(async (resolve, reject) => {
             let randomColor = Math.floor((Math.random() * color) + 1);
-            const response = await fetch(`http://localhost:${ process.env.PORT }/color/` + randomColor);
+            const response = await fetch(`https://the-purple-door.herokuapp.com/color/` + randomColor);
             const colorObject = await response.json();
 
             resolve(colorObject);
